@@ -1,5 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Ingeniería y Data Science</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2021-03-20T00:00:00-03:00</updated><subtitle>Un archivo de mis proyectos</subtitle><entry><title>A sample article 20</title><link href="/a-sample-article-20.html" rel="alternate"></link><published>2021-03-20T00:00:00-03:00</published><updated>2021-03-20T00:00:00-03:00</updated><author><name>Rodrigo Lara</name></author><id>tag:None,2021-03-20:/a-sample-article-20.html</id><summary type="html">&lt;h2&gt;Duro moverat Inachides moventem puppim prona adventu&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Ingeniería y Data Science</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2022-06-25T22:46:00-04:00</updated><subtitle>Un archivo de mis proyectos</subtitle><entry><title>Tutorial para realizar página web con Pelican en Github Pages</title><link href="/tutorial-pelican-github-pages.html" rel="alternate"></link><published>2022-06-25T22:46:00-04:00</published><updated>2022-06-25T22:46:00-04:00</updated><author><name>Rodrigo Lara</name></author><id>tag:None,2022-06-25:/tutorial-pelican-github-pages.html</id><summary type="html">&lt;p&gt;Hace años por allá el 2013 probé sitios web estáticos en github pages e intenté usar sin mucho éxito Jekyll y Pelican. En general la curiosidad no llega más lejos que la necesidad. Sólo me ha tocado trabajar con sitios web en wordpress y ahora último prestashop debido a que …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hace años por allá el 2013 probé sitios web estáticos en github pages e intenté usar sin mucho éxito Jekyll y Pelican. En general la curiosidad no llega más lejos que la necesidad. Sólo me ha tocado trabajar con sitios web en wordpress y ahora último prestashop debido a que son las tecnologías usadas en las páginas web de mis últimos dos trabajos, sin embargo no son lo que necesito actualmente para crear mi página web personal. Utilicé Google Sites con éxito para un proyecto de baterías junto con un amigo, pero la selección fue restringida a que debía ser fácil de escribir contenido y configurar. Bueno ninguna de las opciones cumple con mis requisitos personales los cuales son:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Posibilidad de integración de resultados de Jupyter Notebook.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Seguimiento de cambios con GitHub y uso de alojamiento gratuito de Github Pages.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Capacidad de personalización en Python a futuro.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Por lo que decidí probar denuevo Pelican, pero
+el principal problema que tuve durante este proceso fue que los tutoriales que encontré acerca de Pelican y Github Pages no me permitieron ejecutar todos los pasos como corresponde y perdí bastante tiempo tratando de entender por qué no lograba subir el sitio a Github.&lt;/p&gt;
+&lt;p&gt;En este tutorial mostraré el procedimiento actualizado al 2022 para realizar páginas web en Pelican y sincronizarlas con Git hacia Github. Existen algunos comandos que sólo funcionan con python instalado con anaconda (crear y activar entornos virtuales) y en linux (el comando make puede que no funcione en windows, en ese caso probar fab).&lt;/p&gt;
+&lt;h2&gt;Creación de repositorios en GitHub&lt;/h2&gt;
+&lt;p&gt;Github Pages permite una sola página web personal con el formato &lt;code&gt;https://nombre-usuario.github.io&lt;/code&gt; pero no restringe la cantidad de las páginas de proyecto que se accederían &lt;code&gt;https://nombre-usuario.github.io/nombre-proyecto&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;La mayoría de los tutoriales explican como realizarlo en las páginas de proyecto, y la documentación de Pelican explica sólo la parte final de subir el sitio para ambos casos, por lo que existía un vacío y algunas incompatibilidades con el estado actual de Github y los tutoriales.&lt;/p&gt;
+&lt;p&gt;El primer paso es crear dos repositorios en Github, uno para alojar la página web, y otro para alojar el código de la página para realizar el seguimiento de cambios.&lt;/p&gt;
+&lt;p&gt;Al crear el repositorio para alojar la página web debemos colocar en el nombre del repositorio &lt;code&gt;nombre-de-usuario.github.io&lt;/code&gt;, por ejemplo:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Imagen 1" src="/images/githubusuario.png"&gt;&lt;/p&gt;
+&lt;p&gt;Recomiendo no crear un readme ni gitignore ni licencia ya que no los necesitamos para este repositorio.&lt;/p&gt;
+&lt;p&gt;A continuación creamos el repositorio para el seguimiento del código del sitio web. En este puedes colocar cualquier nombre del proyecto y colocar un readme también.
+Una vez realizado este repositorio el último paso es crear una llave de acceso personal en GitHub.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Ingresar a configuracion/settings del usuario (no del proyecto)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Al final de la lista de opciones se encuentra developer settings&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ingresar a personal access token y generar un nuevo token, luego seleccionar la duración del token(si eliges duración tendrás que crear un nuevo token periódicamente) y finalmente elegir el scope, en particular yo seleccioné todos los permisos para evitar problemas de acceso pero probablemente no sean necesario todos.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;El token aparecerá una sola vez por lo que debes copiarlo y guardarlo.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Este token lo utilizaremos para autenticarnos al realizar el push del repositorio local hacia github y para subir la página web.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Configuración entorno virtual de Python e instalación de Pelican, Git y dependencias&lt;/h2&gt;
+&lt;p&gt;Para instalar Pelican en Anaconda Python se recomienda crear un entorno virtual.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;conda create -n nombre-entorno-virtual
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Luego se debe activar el entorno virtual&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;conda activate nombre-entorno-virtual
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Una vez activado instalar pip y opcionalmente git si es que no está instalado en el sistema operativo aún&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;conda install pip
+conda install git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Luego instalar Pelican&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pip install pelican
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Adicionalmente instalar las siguientes librerías&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pip install markdown
+pip install fabric3
+pip install bs4
+pip install ghp-import
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Clonar repositorio del código fuente del sitio&lt;/h2&gt;
+&lt;p&gt;En el terminal ir a la ubicación donde alojarás el sitio en forma local y clonar el repositorio donde se realizará el seguimiento del código.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git clone https://github.com/nombre-usuario/nombre-repositorio
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Entrar a la carpeta del repositorio desde la terminal, esa será la ubicación principal desde donde trabajaremos. Para sincronizar el repositorio al realizar cambios desde distintos computadores, realizar primero un git pull antes de editar.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git pull origin main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Utilizar pelican-quickstart&lt;/h2&gt;
+&lt;p&gt;Pelican brinda un script para crear los archivos necesarios para desarrollar el sitio&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;pelican-quickstart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Aquí muestro el contenido del script con las opciones que seleccioné&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Welcome to pelican-quickstart v4.7.2.
+
+This script will help you create a new Pelican-based website.
+
+Please answer the following questions so this script can generate the files needed by Pelican.
+
+
+&amp;gt; Where do you want to create your new web site? [.]
+&amp;gt; What will be the title of this web site? Demo
+&amp;gt; Who will be the author of this web site? Rodrigo Lara
+&amp;gt; What will be the default language of this web site? [en] es
+&amp;gt; Do you want to specify a URL prefix? e.g., https://example.com   (Y/n) Y
+&amp;gt; What is your URL prefix? (see above example; no trailing slash) https://rodrigolara-cl.github.io
+&amp;gt; Do you want to enable article pagination? (Y/n) Y
+&amp;gt; How many articles per page do you want? [10] 5
+&amp;gt; What is your time zone? [Europe/Rome] America/Santiago
+&amp;gt; Do you want to generate a tasks.py/Makefile to automate generation and publishing? (Y/n) y
+&amp;gt; Do you want to upload your website using FTP? (y/N) n
+&amp;gt; Do you want to upload your website using SSH? (y/N) n
+&amp;gt; Do you want to upload your website using Dropbox? (y/N) n
+&amp;gt; Do you want to upload your website using S3? (y/N) n
+&amp;gt; Do you want to upload your website using Rackspace Cloud Files? (y/N) n
+&amp;gt; Do you want to upload your website using GitHub Pages? (y/N) y
+&amp;gt; Is this your personal page (username.github.io)? (y/N) y
+Done. Your new project is available at /home/rodrigo/rodrigolara-cl/website
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Crear contenido y subirlo a github pages&lt;/h2&gt;
+&lt;p&gt;Crear un documento en markdown(.md) en la carpeta /content/.&lt;/p&gt;
+&lt;p&gt;En el encabezado se debe colocar la siguiente metadata:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Title: Título del post
+Date: 2022-06-25 21:05
+Modified: 2022-06-25 22:30
+Tags: pelican, publishing
+Keywords:
+Category: Python
+Slug: mi-post
+Author: Rodrigo Lara
+Authors: Autor 1, Autor 2
+Summary: Versión corta para el index y el feed
+Lang: es
+Translation: true or false
+Status: draft, hidden or published
+Template:
+Save as:
+Url:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;En la &lt;a href="https://docs.getpelican.com/en/latest/content.html"&gt;documentación de Pelican&lt;/a&gt; pueden ver un detalle de lo que significa cada ítem, no es necesario colocarlos todos, pero los obligatorios son el título y la fecha.&lt;/p&gt;
+&lt;p&gt;Una vez redactado el artículo para visualizarlo en el navegador de manera local.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;make html
+make serve
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Podemos visualizar la página en ´http://localhost:8000´ en el navegador.&lt;/p&gt;
+&lt;p&gt;Cuando esté listo para ser publicado utilizaremos el siguiente comando.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;make publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Sincronizaremos primero el repositorio del código fuente del sitio web.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git add .
+git commit -m &amp;quot;descripcion cambios&amp;quot;
+git pull origin main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Al realizar esto nos pedirá el usuario y la contraseña, que en este caso será el token de acceso que guardamos anteriormente.&lt;/p&gt;
+&lt;p&gt;Finalmente sincronizaremos la carpeta output hacia el main branch del repositorio que alojará la página web.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ghp-import output -b gh-pages
+git push https://token-de-acceso@github.com/nombre-usuario/nombre-usuario.github.io.git gh-pages:main
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Luego hay que esperar unos minutos para que la página esté activa en la dirección ´nombre-usuario.github.io´.&lt;/p&gt;
+&lt;h2&gt;Comentarios finales&lt;/h2&gt;
+&lt;p&gt;Los mayores problemas que tuve al configurar el sitio con Github Pages fueron debido a las nuevas restricciones de acceso de Github que dejan un poco obsoleto algunos tutoriales por unos pocos detalles. Sin embargo el flujo de trabajo varía un poco solamente y agradezco la información obtenida desde los siguientes enlaces.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://pythonforundergradengineers.com/how-i-built-this-site-1.html"&gt;https://pythonforundergradengineers.com/how-i-built-this-site-1.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.getpelican.com/en/latest/tips.html"&gt;https://docs.getpelican.com/en/latest/tips.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://trevorfox.com/2020/03/starting-an-seo-project-with-python-pelican-and-aws/"&gt;https://trevorfox.com/2020/03/starting-an-seo-project-with-python-pelican-and-aws/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://antonellocalamea.medium.com/step-by-step-guide-to-setup-a-web-site-using-pelican-and-gitpages-5de976ae44cb"&gt;https://antonellocalamea.medium.com/step-by-step-guide-to-setup-a-web-site-using-pelican-and-gitpages-5de976ae44cb&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Luego de tener el procedimiento probado y funcionando los siguientes pasos son elegir y configurar un tema, crear el contenido, utilizar las funciones de Pelican y de los temas, y utilizar plugins existentes o crear nuevos en caso de necesitar funciones especiales para crear el sitio web estático perfecto para ti.&lt;/p&gt;</content><category term="Blog"></category><category term="pelican"></category><category term="github"></category><category term="github-pages"></category></entry><entry><title>A sample article 20</title><link href="/a-sample-article-20.html" rel="alternate"></link><published>2021-03-20T00:00:00-03:00</published><updated>2021-03-20T00:00:00-03:00</updated><author><name>Rodrigo Lara</name></author><id>tag:None,2021-03-20:/a-sample-article-20.html</id><summary type="html">&lt;h2&gt;Duro moverat Inachides moventem puppim prona adventu&lt;/h2&gt;
 &lt;h3&gt;Miscet ab numquam plurimus inploraret aliud&lt;/h3&gt;
 &lt;p&gt;Lorem markdownum, rex Mavors, spicis inque inertem nato &lt;strong&gt;accusoque motu&lt;/strong&gt;
 confertur per oculis lumina accepisse frequens mihi. Serius sine sub, ad gloria
